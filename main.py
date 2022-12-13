@@ -8,11 +8,11 @@ from sklearn.svm import SVC
 
 def spam_SVM():
     # Load data from csv
-    data = pd.read_csv("spam.csv")
+    data = pd.read_csv("dataset.csv").astype("U")
 
     # Split data into text and ham/spam label
-    X = data["text"].values
-    y = data["label_num"].values
+    X = data["email_text"].values
+    y = data["label"].values
 
     # Randomly split data into test and training sets with 80/20 split
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
