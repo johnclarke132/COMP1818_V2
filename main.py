@@ -1,9 +1,12 @@
 import pandas as pd
+from matplotlib import pyplot as plt
 from sklearn import svm
 from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score, matthews_corrcoef
+from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score, matthews_corrcoef, \
+    confusion_matrix, plot_confusion_matrix, classification_report
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.svm import SVC
+import numpy as np
 
 
 def spam_SVM():
@@ -25,18 +28,25 @@ def spam_SVM():
     # Apply SVC algorithm
     model = SVC(kernel="rbf", random_state=0, probability=True)
     model.fit(X_train, y_train)
-    # print(model.score(X_test, y_test))  # Return accuracy score
+    print(model.score(X_test, y_test))  # Return accuracy score
 
     # Fine tune parameters (improve accuracy) using GridSearchCV function
     tuned_parameters = {'kernel': ['rbf', 'linear'], 'gamma': [1e-3, 1e-4], 'C': [1, 10, 100, 1000]}
     tuned_model = GridSearchCV(svm.SVC(probability=True), tuned_parameters)
     tuned_model.fit(X_train, y_train)
-    # print(tuned_model.score(X_test, y_test))  # Return accuracy score for tuned model
+    print(tuned_model.best_params_)  # Return best parameters from GridSearchCV
+    print(tuned_model.score(X_test, y_test))  # Return accuracy score for tuned model
 
     # Make predictions
     y_pred = tuned_model.predict(X_test)
-    # y_pred_prob = tuned_model.predict_proba(X_test)
-    # spam_probs = y_pred_prob[:, 1]
+    y_pred_prob = tuned_model.predict_proba(X_test)
+    spam_probs = y_pred_prob[:, 1]
+
+    # Confusion matrix
+    confusion_matrix(y_test, y_pred)
+    plot_confusion_matrix(tuned_model, X_test, y_test, cmap=plt.cm.Blues)
+    plt.show()
+    print(classification_report(y_test, y_pred))
 
     # Scores
     accuracy = accuracy_score(y_true=y_test, y_pred=y_pred)
