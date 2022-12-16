@@ -6,7 +6,6 @@ from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_sc
     confusion_matrix, plot_confusion_matrix, classification_report
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.svm import SVC
-import numpy as np
 
 
 def spam_SVM():
